@@ -1,0 +1,84 @@
+PLUGIN_EXPORTTOMUSICIP
+	EN	Export To MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_DESC
+	EN	Export rating, play count and date last played values from LMS to MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_LOG_DESC
+	EN	Log of plugin ExportToMusicIP
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_REPO_LINK_TEXT
+	EN	Click here for more information.
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_REPO_LINK
+	EN	https://github.com/AF-1/lms-exporttomusicip
+
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_EXPORT
+	EN	Export
+
+PLUGIN_EXPORTTOMUSICIP_MUSICIPSETTINGS
+	EN	MusicIP settings
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_HOSTNAME
+	EN	MusicIP hostname
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_HOSTNAME_DESC
+	EN	Hostname of computer where MusicIP is running
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_PORT
+	EN	MusicIP HTTP port
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_PORT_DESC
+	EN	Port which is used for MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_TIMEOUT
+	EN	Timeout
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_TIMEOUT_DESC
+	EN	Timeout for requests to MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_REPLACEEXTENSION
+	EN	File extension in MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_REPLACEEXTENSION_DESC
+	EN	Audio file extension in MusicIP (for example .mp3). Empty means same file extension as in LMS.
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_MIPMUSICPATH
+	EN	Music path in MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_MIPMUSICPATH_DESC
+	EN	Path to main music directory in MusicIP, empty means same music path as in LMS
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH
+	EN	Music path in LMS
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH_DESC
+	EN	Path to main music directory in LMS, empty means same music path as in LMS
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS
+	EN	Adjust odd ratings to LMS rating scale
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS_DESC
+	EN	LMS uses a rating scale with values ranging from zero (no stars) to 100 (5 stars) and 10 for every additional half-star (Examples: 20 = 1 star, 50 = 2.5 stars).<br><br>If your LMS database includes odd rating values (like 4 or 67), i.e. not evenly divisible by 10, you can use this setting to <b>export all odd rating values as rounded values that comply with the LMS standard rating scale</b> (evenly divisible by 10).<br>Example: 4 => 0 and 67 => 70.<br><br>This will only adjust only rating values exported to MusicIP, not those stored in the LMS database.
+
+PLUGIN_EXPORTTOMUSICIP_SCHEDULEDEXPORTS
+	EN	Automatic scheduled export
+
+PLUGIN_EXPORTTOMUSICIP_SCHEDULEDEXPORTS_DESC
+	EN	Let LMS export values for rating, play count and date last played to MusicIP once a day
+
+PLUGIN_EXPORTTOMUSICIP_AUTO_EXPORT_TIME
+	EN	Scheduled export time
+
+PLUGIN_EXPORTTOMUSICIP_AUTO_EXPORT_TIME_DESC
+	EN	Set the time for a daily automatic export to MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_EXPORTING
+	EN	Export to MusicIP
+
+PLUGIN_EXPORTTOMUSICIP_EXPORTING_EXPORT_BUTTON
+	EN	Export now
+
+PLUGIN_EXPORTTOMUSICIP_EXPORTING_ABORT_BUTTON
+	EN	Abort
