@@ -42,13 +42,6 @@ my $errors = 0;
 
 my @songs = ();
 
-struct TrackExportInfo => {
-	url => '$',
-	rating => '$',
-	playCount => '$',
-	lastPlayed => '$',
-};
-
 my $prefs = preferences('plugin.exporttomusicip');
 my $serverPrefs = preferences('server');
 my $log = Slim::Utils::Log->addLogCategory({
@@ -122,20 +115,19 @@ sub initExport {
 		$sth->execute();
 		$sth->bind_columns(undef, \$url, \$playCount, \$lastPlayed, \$rating);
 		while( $sth->fetch() ) {
-			my $track = TrackExportInfo->new();
-			$track->url($url);
+			my $thisTrack->{'url'} = $url;
 			if ($rating) {
 				if ($prefs->get('adjustexportedratings')) {
-					$track->rating(adjustRating($rating)/20);
+					$thisTrack->{'rating'} = adjustRating($rating)/20;
 				} else {
-					$track->rating($rating/20);
+					$thisTrack->{'rating'} = $rating/20;
 				}
 			} else {
-				$track->rating(0);
+				$thisTrack->{'rating'} = 0;
 			}
-			$track->playCount($playCount);
-			$track->lastPlayed($lastPlayed);
-			push @songs, $track;
+			$thisTrack->{'playcount'} = $playCount;
+			$thisTrack->{'lastplayed'} = $lastPlayed;
+			push @songs, $thisTrack;
 		}
 		$sth->finish();
 	};
@@ -145,6 +137,8 @@ sub initExport {
 	} else {
 		$log->debug('Found '.scalar(@songs).' tracks with statistics.');
 	}
+
+	$log->debug('songs with stats = '.Data::Dump::dump(\@songs));
 
 	foreach (@songs) {
 		handleTrack($_);
@@ -186,10 +180,16 @@ sub abortExport {
 sub handleTrack {
 	my $track = shift;
 
-	my $url = $track->url();
-	my $rating = $track->rating();
-	my $playCount = $track->playCount();
-	my $lastPlayed = $track->lastPlayed();
+	my $url = $track->{'url'};
+	my $rating = $track->{'rating'};
+	my $playCount = $track->{'playcount'};
+	my $lastPlayed = $track->{'lastplayed'};
+
+	if (!$url) {
+		$log->warn("No url for track");
+		$errors++;
+		return;
+	}
 
 	my $hostname = $prefs->get('musicip_hostname');
 	my $port = $prefs->get('musicip_port');
