@@ -19,17 +19,16 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 #
 
+package Plugins::ExportToMusicIP::Plugin;
+
 use strict;
 use warnings;
 use utf8;
-
-package Plugins::ExportToMusicIP::Plugin;
-
 use base qw(Slim::Plugin::Base);
+
 use Slim::Utils::Log;
 use Slim::Utils::Prefs;
 use Slim::Utils::Misc;
-use Class::Struct;
 use LWP::UserAgent;
 use Time::HiRes qw(time);
 use Slim::Schema;
@@ -181,9 +180,13 @@ sub handleTrack {
 	my $track = shift;
 
 	my $url = $track->{'url'};
+	$log->debug('track url = '.Data::Dump::dump($url));
 	my $rating = $track->{'rating'};
+	$log->debug('track rating = '.Data::Dump::dump($rating));
 	my $playCount = $track->{'playcount'};
+	$log->debug('track playCount = '.Data::Dump::dump($playCount));
 	my $lastPlayed = $track->{'lastplayed'};
+	$log->debug('lastPlayed url = '.Data::Dump::dump($lastPlayed));
 
 	if (!$url) {
 		$log->warn("No url for track");
@@ -194,6 +197,7 @@ sub handleTrack {
 	my $hostname = $prefs->get('musicip_hostname');
 	my $port = $prefs->get('musicip_port');
 	$url = getMusicIpURL($url);
+	$log->debug('musicip url = '.Data::Dump::dump($url));
 	if ($rating && $rating > 0) {
 		my $musicipurl = "http://$hostname:$port/api/setRating?song=$url&rating=$rating";
 		my $http = LWP::UserAgent->new;
@@ -207,6 +211,7 @@ sub handleTrack {
 				$log->debug("Set Rating = $rating for $url");
 			} else {
 				$log->warn("Failure setting Rating = $rating for $url");
+				$errors++;
 			}
 		} else {
 			$log->warn("Failed to call MusicIP at: $musicipurl");
@@ -226,6 +231,7 @@ sub handleTrack {
 				$log->debug("Set PlayCount = $playCount for $url");
 			} else {
 				$log->warn("Failure setting PlayCount = $playCount for $url");
+				$errors++;
 			}
 		} else {
 			$log->warn("Failed to call MusicIP at: $musicipurl");
@@ -245,6 +251,7 @@ sub handleTrack {
 				$log->debug("Set LastPlayed = $lastPlayed for $url");
 			} else {
 				$log->warn("Failure setting LastPlayed = $lastPlayed for $url");
+				$errors++;
 			}
 		} else {
 			$log->warn("Failed to call MusicIP at: $musicipurl");
@@ -255,34 +262,46 @@ sub handleTrack {
 
 sub getMusicIpURL {
 	my $url = shift;
+	$log->debug('url = '.Data::Dump::dump($url));
+
 	my $replacePath = $prefs->get('musicip_mipmusicpath');
 	if ($replacePath) {
 		$replacePath =~ s/\\/\//isg;
 		$replacePath = escape($replacePath);
 		my $nativeRoot = $prefs->get('musicip_lmsmusicpath');
 		if (!defined($nativeRoot) || $nativeRoot eq '') {
-			my $nativeRoot = $serverPrefs->get('audiodir');
+			my $c = $serverPrefs->get('audiodir');
 		}
+		$log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
+
 		my $nativeUrl = Slim::Utils::Misc::fileURLFromPath($nativeRoot);
+		$log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
 		if ($url =~ /$nativeUrl/) {
 			$url =~ s/\\/\//isg;
 			$nativeUrl =~ s/\\/\//isg;
 			$url =~ s/$nativeUrl/$replacePath/isg;
+			$log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
 		} else {
 			$url = Slim::Utils::Misc::pathFromFileURL($url);
+			$log->debug('path = '.Data::Dump::dump($url));
 		}
 	} else {
 		$url = Slim::Utils::Misc::pathFromFileURL($url);
+		$log->debug('path = '.Data::Dump::dump($url));
 	}
 
 	my $replaceExtension = $prefs->get('musicip_replaceextension');
 	if ($replaceExtension) {
 		$replaceExtension = '.'.$replaceExtension unless substr($replaceExtension, 0, 1) eq '.';
 		$url =~ s/\.[^.]*$/$replaceExtension/isg;
+		$log->debug('url = '.Data::Dump::dump($url));
 	}
 	$url =~ s/\\/\//isg;
+	$log->debug('url after regex = '.Data::Dump::dump($url));
 	$url = unescape($url);
+	$log->debug('url after unescape = '.Data::Dump::dump($url));
 	$url = URI::Escape::uri_escape($url);
+	$log->debug('url after escape = '.Data::Dump::dump($url));
 	return $url;
 }
 
@@ -392,11 +411,11 @@ sub adjustRating {
 
 *escape = \&URI::Escape::uri_escape_utf8;
 
-sub unescape {
-	my ($isParam, $in) = @_;
-	$in =~ s/\+/ /g if $isParam;
-	$in =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
-	return $in;
-}
+*unescape = \&URI::Escape::uri_unescape;
+# sub unescape {
+# 	my $in = shift;
+# 	$in =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+# 	return $in;
+# }
 
 1;
