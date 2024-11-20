@@ -272,7 +272,7 @@ sub getMusicIpURL {
 		if (!defined($nativeRoot) || $nativeRoot eq '') {
 			my $c = $serverPrefs->get('audiodir');
 		}
-		$log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
+		$log->debug('nativeRoot url = '.Data::Dump::dump($nativeRoot));
 
 		my $nativeUrl = Slim::Utils::Misc::fileURLFromPath($nativeRoot);
 		$log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
