@@ -32,7 +32,7 @@ Plugin to export rating, play count and date last played values from LMS to Musi
 ### Manual Install
 
 Please read the instructions on how to [install a plugin manually](https://github.com/AF-1/sobras/wiki/Manual-installation-of-LMS-plugins).
-<br><br><br>
+<br><br><br><br>
 
 
 ## FAQ
@@ -47,7 +47,7 @@ The export results can be confirmed by opening the MIP cache in the windows vers
      - Linux: ~/.MusicMagic
 </p></details><br>
 
-<details><summary>»<b>How to troubleshoot errors</b>«</summary><br><p>
+<details><summary>»<b>How to troubleshoot issues</b>«</summary><br><p>
 Go to <i>LMS Settings > Advanced > Export to MusicIP</i> and set the debug level of this plugin to <i>Info</i>. Check the server.log for relevant error messages and warnings.<br>If you need to ask for support in the LMS forum, set the debug level to <i>debug</i> and include the log in your post.
 </p></details><br>
 
