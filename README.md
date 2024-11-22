@@ -34,6 +34,7 @@ Plugin to export rating, play count and date last played values from LMS to Musi
 Please read the instructions on how to [install a plugin manually](https://github.com/AF-1/sobras/wiki/Manual-installation-of-LMS-plugins).
 <br><br><br>
 
+
 ## FAQ
 
 <details><summary>»<b>How to verify in MusicIP that the export was a success</b>«</summary><br><p>
