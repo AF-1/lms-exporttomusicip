@@ -3,7 +3,7 @@ Export To MusicIP
 
 Plugin to export rating, play count and date last played values from LMS to MusicIP.<br>
 
-⚠️ **This is supposed to be a one-off. I don't use MusicIP, so I can't run tests and provide support for this plugin.**
+⚠️ **I don't use MusicIP, so I can't run tests and provide support for this plugin.**
 <br><br>
 
 ## Requirements
@@ -12,6 +12,11 @@ Plugin to export rating, play count and date last played values from LMS to Musi
 - LMS database = SQLite
 
 <br><br>
+
+## Screenshots[^1]
+
+<img src="screenshots/etmip.jpg" width="100%">
+<br><br><br>
 
 ## Installation
 
@@ -28,3 +33,33 @@ Plugin to export rating, play count and date last played values from LMS to Musi
 
 Please read the instructions on how to [install a plugin manually](https://github.com/AF-1/sobras/wiki/Manual-installation-of-LMS-plugins).
 <br><br><br>
+
+## FAQ
+
+<details><summary>»<b>How to verify in MusicIP that the export was a success</b>«</summary><br><p>
+The export results can be confirmed by opening the MIP cache in the windows version of MIP. <i>Last Played</i> and <i>Ratings</i> can be added to the visible columns if not already there.<br><br>
+
+- Cache file location:<br>
+
+     - Windows: C:\Users\<YOUR USERNAME>\AppData\Roaming\MusicIP\MusicIP Mixer\default.m3lib<br>
+
+     - Linux: ~/.MusicMagic
+</p></details><br>
+
+<details><summary>»<b>How to troubleshoot errors</b>«</summary><br><p>
+Go to <i>LMS Settings > Advanced > Export to MusicIP</i> and set the debug level of this plugin to <i>Info</i>. Check the server.log for relevant error messages and warnings.<br>If you need to ask for support in the LMS forum, set the debug level to <i>debug</i> and include the log in your post.
+</p></details><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+[^1]: The screenshots might not correspond to the UI of the latest release in every detail.
