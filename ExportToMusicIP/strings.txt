@@ -24,7 +24,7 @@ PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_HOSTNAME
 	EN	MusicIP hostname
 
 PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_HOSTNAME_DESC
-	EN	Hostname of computer where MusicIP is running
+	EN	Hostname or ip address of the computer running MusicIP
 
 PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_PORT
 	EN	MusicIP HTTP port
@@ -60,7 +60,7 @@ PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS
 	EN	Adjust odd ratings to LMS rating scale
 
 PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS_DESC
-	EN	LMS uses a rating scale with values ranging from zero (no stars) to 100 (5 stars) and 10 for every additional half-star (Examples: 20 = 1 star, 50 = 2.5 stars).<br><br>If your LMS database includes odd rating values (like 4 or 67), i.e. not evenly divisible by 10, you can use this setting to <b>export all odd rating values as rounded values that comply with the LMS standard rating scale</b> (evenly divisible by 10).<br>Example: 4 => 0 and 67 => 70.<br><br>This will only adjust only rating values exported to MusicIP, not those stored in the LMS database.
+	EN	LMS uses a rating scale with values ranging from zero (no stars) to 100 (5 stars) where 10 equals a half-star (Examples: 20 = 1 star, 50 = 2.5 stars).<br><br>If your LMS database includes odd rating values (like 4 or 67), i.e. not evenly divisible by 10, you can use this setting to <b>export all odd rating values as rounded values that comply with the LMS standard rating scale</b> (evenly divisible by 10).<br>Example: 4 => 0 and 67 => 70.<br><br>This will only adjust rating values exported to MusicIP, not those stored in the LMS database.
 
 PLUGIN_EXPORTTOMUSICIP_SCHEDULEDEXPORTS
 	EN	Automatic scheduled export

@@ -1,4 +1,4 @@
-# ExportToMusicIP
+# Export To MusicIP
 #
 # (c) 2024 AF
 #
@@ -33,12 +33,10 @@ use LWP::UserAgent;
 use Time::HiRes qw(time);
 use Slim::Schema;
 
-my $MusicIpExportFinishTime = undef;
 my $lastMusicIpDate = 0;
 my $MusicIpExportStartTime = 0;
 my $exportAborted = 0;
 my $errors = 0;
-
 my @songs = ();
 
 my $prefs = preferences('plugin.exporttomusicip');
@@ -102,53 +100,65 @@ sub initExport {
 	$exportAborted = 0;
 	$errors = 0;
 
-	my $table = ($apc_enabled && $prefs->get('useapcvalues')) ? 'alternativeplaycount' : 'tracks_persistent';
-	my $sql = "SELECT tracks_persistent.url, $table.playCount, $table.lastPlayed, tracks_persistent.rating FROM tracks_persistent,tracks";
-	$sql .= " left join alternativeplaycount on tracks.urlmd5 = alternativeplaycount.urlmd5" if ($apc_enabled && $prefs->get('useapcvalues'));
-	$sql .= " where tracks_persistent.urlmd5 = tracks.urlmd5 and (tracks_persistent.lastPlayed is not null or tracks_persistent.rating > 0)";
-
-	my $dbh = Slim::Schema->dbh;
-	my $sth = $dbh->prepare($sql);
-	my ($url, $playCount, $lastPlayed, $rating);
-	eval {
-		$sth->execute();
-		$sth->bind_columns(undef, \$url, \$playCount, \$lastPlayed, \$rating);
-		while( $sth->fetch() ) {
-			my $thisTrack->{'url'} = $url;
-			if ($rating) {
-				if ($prefs->get('adjustexportedratings')) {
-					$thisTrack->{'rating'} = adjustRating($rating)/20;
-				} else {
-					$thisTrack->{'rating'} = $rating/20;
-				}
-			} else {
-				$thisTrack->{'rating'} = 0;
-			}
-			$thisTrack->{'playcount'} = $playCount;
-			$thisTrack->{'lastplayed'} = $lastPlayed;
-			push @songs, $thisTrack;
-		}
-		$sth->finish();
-	};
-	if ($@) {
-		$log->warn("SQL error: $DBI::errstr, $@");
+	# test MIP url. No use in proceeding if response = fail
+	my $http = LWP::UserAgent->new;
+	my $hostname = $prefs->get('musicip_hostname');
+	my $port = $prefs->get('musicip_port');
+	$http->timeout($prefs->get('musicip_timeout'));
+	my $musiciptesturl = "http://$hostname:$port/api/cacheid";
+	my $response = $http->get($musiciptesturl);
+	if (!$response->is_success) {
+		$log->error("Failed to call MusicIP at: $musiciptesturl. Please check if the MusicIP hostname/ip address and port in the plugin settings are correct and confirm that the MusicIP service is running and can be access via URL from this computer.");
 		$errors++;
-	} else {
-		$log->debug('Found '.scalar(@songs).' tracks with statistics.');
 	}
 
-	$log->debug('songs with stats = '.Data::Dump::dump(\@songs));
-
-	foreach (@songs) {
-		handleTrack($_);
-		last if $exportAborted;
-		main::idleStreams();
+	unless ($errors) {
+		my $table = ($apc_enabled && $prefs->get('useapcvalues')) ? 'alternativeplaycount' : 'tracks_persistent';
+		my $sql = "SELECT tracks_persistent.url, $table.playCount, $table.lastPlayed, tracks_persistent.rating FROM tracks_persistent,tracks";
+		$sql .= " left join alternativeplaycount on tracks.urlmd5 = alternativeplaycount.urlmd5" if ($apc_enabled && $prefs->get('useapcvalues'));
+		$sql .= " where tracks_persistent.urlmd5 = tracks.urlmd5 and (tracks_persistent.lastPlayed is not null or tracks_persistent.rating > 0)";
+	
+		my $dbh = Slim::Schema->dbh;
+		my $sth = $dbh->prepare($sql);
+		my ($url, $playCount, $lastPlayed, $rating);
+		eval {
+			$sth->execute();
+			$sth->bind_columns(undef, \$url, \$playCount, \$lastPlayed, \$rating);
+			while( $sth->fetch() ) {
+				my $thisTrack->{'url'} = $url;
+				if ($rating) {
+					if ($prefs->get('adjustexportedratings')) {
+						$thisTrack->{'rating'} = adjustRating($rating)/20;
+					} else {
+						$thisTrack->{'rating'} = $rating/20;
+					}
+				} else {
+					$thisTrack->{'rating'} = 0;
+				}
+				$thisTrack->{'playcount'} = $playCount;
+				$thisTrack->{'lastplayed'} = $lastPlayed;
+				push @songs, $thisTrack;
+			}
+			$sth->finish();
+		};
+		if ($@) {
+			$log->warn("SQL error: $DBI::errstr, $@");
+			$errors++;
+		} else {
+			main::DEBUGLOG && $log->is_debug && $log->debug('Found '.scalar(@songs).' tracks with statistics.');
+		}
+	
+		main::DEBUGLOG && $log->is_debug && $log->debug('songs with stats = '.Data::Dump::dump(\@songs));
+	
+		foreach (@songs) {
+			handleTrack($_);
+			last if $exportAborted;
+			main::idleStreams();
+		}
+	
+		main::DEBUGLOG && $log->is_debug && $log->debug('Done exporting: unlocking and closing');
+		finishExport();
 	}
-
-	$log->debug('Done exporting: unlocking and closing');
-	$MusicIpExportFinishTime = time();
-
-	finishExport();
 
 	# export result: 1 = success, 2 = aborted, 3 = errors
 	if ($exportAborted == 1) {
@@ -164,7 +174,7 @@ sub initExport {
 	}
 
 	$prefs->set('ExportInProgress', 0);
-	Slim::Utils::Timers::setTimer(undef, Time::HiRes::time() + 4, sub {$prefs->set('exportResult', 0);});
+	Slim::Utils::Timers::setTimer(undef, Time::HiRes::time() + 20, sub {$prefs->set('exportResult', 0);});
 	$exportAborted = 0;
 }
 
@@ -180,13 +190,13 @@ sub handleTrack {
 	my $track = shift;
 
 	my $url = $track->{'url'};
-	$log->debug('track url = '.Data::Dump::dump($url));
+	main::DEBUGLOG && $log->is_debug && $log->debug('track url = '.Data::Dump::dump($url));
 	my $rating = $track->{'rating'};
-	$log->debug('track rating = '.Data::Dump::dump($rating));
+	main::DEBUGLOG && $log->is_debug && $log->debug('track rating = '.Data::Dump::dump($rating));
 	my $playCount = $track->{'playcount'};
-	$log->debug('track playCount = '.Data::Dump::dump($playCount));
+	main::DEBUGLOG && $log->is_debug && $log->debug('track playCount = '.Data::Dump::dump($playCount));
 	my $lastPlayed = $track->{'lastplayed'};
-	$log->debug('lastPlayed url = '.Data::Dump::dump($lastPlayed));
+	main::DEBUGLOG && $log->is_debug && $log->debug('lastPlayed url = '.Data::Dump::dump($lastPlayed));
 
 	if (!$url) {
 		$log->warn("No url for track");
@@ -197,7 +207,7 @@ sub handleTrack {
 	my $hostname = $prefs->get('musicip_hostname');
 	my $port = $prefs->get('musicip_port');
 	$url = getMusicIpURL($url);
-	$log->debug('musicip url = '.Data::Dump::dump($url));
+	main::DEBUGLOG && $log->is_debug && $log->debug('musicip url = '.Data::Dump::dump($url));
 	if ($rating && $rating > 0) {
 		my $musicipurl = "http://$hostname:$port/api/setRating?song=$url&rating=$rating";
 		my $http = LWP::UserAgent->new;
@@ -208,7 +218,7 @@ sub handleTrack {
 			chomp $result;
 
 			if ($result && $result > 0) {
-				$log->debug("Set Rating = $rating for $url");
+				main::DEBUGLOG && $log->is_debug && $log->debug("Set Rating = $rating for $url");
 			} else {
 				$log->warn("Failure setting Rating = $rating for $url");
 				$errors++;
@@ -228,7 +238,7 @@ sub handleTrack {
 			chomp $result;
 
 			if ($result && $result > 0) {
-				$log->debug("Set PlayCount = $playCount for $url");
+				main::DEBUGLOG && $log->is_debug && $log->debug("Set PlayCount = $playCount for $url");
 			} else {
 				$log->warn("Failure setting PlayCount = $playCount for $url");
 				$errors++;
@@ -248,7 +258,7 @@ sub handleTrack {
 			chomp $result;
 
 			if ($result && $result > 0) {
-				$log->debug("Set LastPlayed = $lastPlayed for $url");
+				main::DEBUGLOG && $log->is_debug && $log->debug("Set LastPlayed = $lastPlayed for $url");
 			} else {
 				$log->warn("Failure setting LastPlayed = $lastPlayed for $url");
 				$errors++;
@@ -262,7 +272,7 @@ sub handleTrack {
 
 sub getMusicIpURL {
 	my $url = shift;
-	$log->debug('url = '.Data::Dump::dump($url));
+	main::DEBUGLOG && $log->is_debug && $log->debug('url = '.Data::Dump::dump($url));
 
 	my $replacePath = $prefs->get('musicip_mipmusicpath');
 	if ($replacePath) {
@@ -272,36 +282,36 @@ sub getMusicIpURL {
 		if (!defined($nativeRoot) || $nativeRoot eq '') {
 			my $c = $serverPrefs->get('audiodir');
 		}
-		$log->debug('nativeRoot url = '.Data::Dump::dump($nativeRoot));
+		main::DEBUGLOG && $log->is_debug && $log->debug('nativeRoot url = '.Data::Dump::dump($nativeRoot));
 
 		my $nativeUrl = Slim::Utils::Misc::fileURLFromPath($nativeRoot);
-		$log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
+		main::DEBUGLOG && $log->is_debug && $log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
 		if ($url =~ /$nativeUrl/) {
 			$url =~ s/\\/\//isg;
 			$nativeUrl =~ s/\\/\//isg;
 			$url =~ s/$nativeUrl/$replacePath/isg;
-			$log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
+			main::DEBUGLOG && $log->is_debug && $log->debug('nativeRoot url = '.Data::Dump::dump($nativeUrl));
 		} else {
 			$url = Slim::Utils::Misc::pathFromFileURL($url);
-			$log->debug('path = '.Data::Dump::dump($url));
+			main::DEBUGLOG && $log->is_debug && $log->debug('path = '.Data::Dump::dump($url));
 		}
 	} else {
 		$url = Slim::Utils::Misc::pathFromFileURL($url);
-		$log->debug('path = '.Data::Dump::dump($url));
+		main::DEBUGLOG && $log->is_debug && $log->debug('path = '.Data::Dump::dump($url));
 	}
 
 	my $replaceExtension = $prefs->get('musicip_replaceextension');
 	if ($replaceExtension) {
 		$replaceExtension = '.'.$replaceExtension unless substr($replaceExtension, 0, 1) eq '.';
 		$url =~ s/\.[^.]*$/$replaceExtension/isg;
-		$log->debug('url = '.Data::Dump::dump($url));
+		main::DEBUGLOG && $log->is_debug && $log->debug('url = '.Data::Dump::dump($url));
 	}
 	$url =~ s/\\/\//isg;
-	$log->debug('url after regex = '.Data::Dump::dump($url));
+	main::DEBUGLOG && $log->is_debug && $log->debug('url after regex = '.Data::Dump::dump($url));
 	$url = unescape($url);
-	$log->debug('url after unescape = '.Data::Dump::dump($url));
+	main::DEBUGLOG && $log->is_debug && $log->debug('url after unescape = '.Data::Dump::dump($url));
 	$url = URI::Escape::uri_escape($url);
-	$log->debug('url after escape = '.Data::Dump::dump($url));
+	main::DEBUGLOG && $log->is_debug && $log->debug('url after escape = '.Data::Dump::dump($url));
 	return $url;
 }
 
@@ -309,7 +319,7 @@ sub finishExport {
 	my $hostname = $prefs->get('musicip_hostname');
 	my $port = $prefs->get('musicip_port');
 	my $musicipurl = "http://$hostname:$port/api/cacheid";
-	$log->debug("Calling: $musicipurl");
+	main::DEBUGLOG && $log->is_debug && $log->debug("Calling: $musicipurl");
 	my $http = LWP::UserAgent->new;
 	$http->timeout($prefs->get('musicip_timeout'));
 	my $response = $http->get("http://$hostname:$port/api/flush");
@@ -410,12 +420,6 @@ sub adjustRating {
 }
 
 *escape = \&URI::Escape::uri_escape_utf8;
-
 *unescape = \&URI::Escape::uri_unescape;
-# sub unescape {
-# 	my $in = shift;
-# 	$in =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
-# 	return $in;
-# }
 
 1;

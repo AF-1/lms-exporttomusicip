@@ -3,7 +3,7 @@
 	<id>af75fe4d-d639-7dcb-b303-dbeaf721f616</id>
 	<name>PLUGIN_EXPORTTOMUSICIP</name>
 	<module>Plugins::ExportToMusicIP::Plugin</module>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 	<description>PLUGIN_EXPORTTOMUSICIP_DESC</description>
 	<creator>AF</creator>
 	<optionsURL>plugins/ExportToMusicIP/settings/settings.html</optionsURL>

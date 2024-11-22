@@ -122,15 +122,12 @@
 					console.log('Export completed - success');
 					document.getElementById('statusmsg').classList.add('success');
 					document.getElementById('statusmsg').innerHTML = 'Export completed - success';
-					setTimeout(getPrefVal, 3000, 'exportResult', '0');
 				} else if (Object.values(jsonData.result)[0] == 2) {
 					console.log('Export aborted');
 					document.getElementById('statusmsg').innerHTML = 'Export aborted';
-					setTimeout(getPrefVal, 3000, 'exportResult', '0');
 				} else if (Object.values(jsonData.result)[0] == 3) {
 					console.log('Export completed with errors');
 					document.getElementById('statusmsg').innerHTML = 'Export completed with errors. Check server log for details.';
-					setTimeout(getPrefVal, 3000, 'exportResult', '0');
 				}
 			}
 		}).catch(function(error) {

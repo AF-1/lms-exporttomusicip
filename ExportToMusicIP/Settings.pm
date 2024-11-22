@@ -1,4 +1,4 @@
-# ExportToMusicIP::Settings
+# Export To MusicIP - Settings
 #
 # (c) 2024 AF
 #
@@ -24,7 +24,6 @@ package Plugins::ExportToMusicIP::Settings;
 use strict;
 use warnings;
 use utf8;
-
 use base qw(Slim::Web::Settings);
 
 use Slim::Utils::Log;
@@ -88,7 +87,7 @@ sub beforeRender {
 	my $host = $paramRef->{host} || (Slim::Utils::Network::serverAddr() . ':' . preferences('server')->get('httpport'));
 	$paramRef->{'squeezebox_server_jsondatareq'} = 'http://' . $host . '/jsonrpc.js';
 
-	# disable manual export if active export
+	# disable manual export if active export or lm scan
 	$paramRef->{'activelmsscan'} = 1 if (!Slim::Schema::hasLibrary() || Slim::Music::Import->stillScanning);
 	$paramRef->{'activemipexport'} = 1 if $prefs->get('ExportInProgress');
 }
