@@ -44,7 +44,7 @@ sub page {
 }
 
 sub prefs {
-	return ($prefs, qw(useapcvalues musicip_hostname musicip_port musicip_timeout musicip_replaceextension musicip_lmsmusicpath musicip_mipmusicpath scheduledexports exporttime));
+	return ($prefs, qw(useapcvalues musicip_hostname musicip_port musicip_timeout musicip_replaceextension musicip_lmsmusicpath musicip_mipmusicpath scheduledexports exporttime postscanexport));
 }
 
 sub handler {

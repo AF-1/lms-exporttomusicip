@@ -58,6 +58,8 @@ sub initPlugin {
 		Plugins::ExportToMusicIP::Settings->new();
 	}
 	initPrefs();
+
+	Slim::Control::Request::subscribe(\&_setPostScanCBTimer, [['rescan'], ['done']]);
 }
 
 sub postinitPlugin {
@@ -93,6 +95,11 @@ sub initPrefs {
 }
 
 sub initExport {
+	if (!Slim::Schema::hasLibrary() || Slim::Music::Import->stillScanning) {
+		main::INFOLOG && $log->is_info && $log->info('Cannot export. Active LMS scan detected.');
+		return;
+	}
+
 	@songs = ();
 	$MusicIpExportStartTime = time();
 	$prefs->set('ExportInProgress', 1);
@@ -117,7 +124,7 @@ sub initExport {
 		my $sql = "SELECT tracks_persistent.url, $table.playCount, $table.lastPlayed, tracks_persistent.rating FROM tracks_persistent,tracks";
 		$sql .= " left join alternativeplaycount on tracks.urlmd5 = alternativeplaycount.urlmd5" if ($apc_enabled && $prefs->get('useapcvalues'));
 		$sql .= " where tracks_persistent.urlmd5 = tracks.urlmd5 and (tracks_persistent.lastPlayed is not null or tracks_persistent.rating > 0)";
-	
+
 		my $dbh = Slim::Schema->dbh;
 		my $sth = $dbh->prepare($sql);
 		my ($url, $playCount, $lastPlayed, $rating);
@@ -127,11 +134,7 @@ sub initExport {
 			while( $sth->fetch() ) {
 				my $thisTrack->{'url'} = $url;
 				if ($rating) {
-					if ($prefs->get('adjustexportedratings')) {
-						$thisTrack->{'rating'} = adjustRating($rating)/20;
-					} else {
-						$thisTrack->{'rating'} = $rating/20;
-					}
+					$thisTrack->{'rating'} = adjustRating($rating)/20;
 				} else {
 					$thisTrack->{'rating'} = 0;
 				}
@@ -147,16 +150,17 @@ sub initExport {
 		} else {
 			main::DEBUGLOG && $log->is_debug && $log->debug('Found '.scalar(@songs).' tracks with statistics.');
 		}
-	
+
 		main::DEBUGLOG && $log->is_debug && $log->debug('songs with stats = '.Data::Dump::dump(\@songs));
-	
+
 		foreach (@songs) {
 			handleTrack($_);
 			last if $exportAborted;
 			main::idleStreams();
 		}
-	
+
 		main::DEBUGLOG && $log->is_debug && $log->debug('Done exporting: unlocking and closing');
+
 		finishExport();
 	}
 
@@ -342,11 +346,15 @@ sub finishExport {
 
 sub exportScheduler {
 	main::DEBUGLOG && $log->is_debug && $log->debug('Checking export scheduler');
-
 	main::DEBUGLOG && $log->is_debug && $log->debug('Killing all export timers');
 	Slim::Utils::Timers::killTimers(undef, \&exportScheduler);
 
 	if ($prefs->get('scheduledexports')) {
+		if (!Slim::Schema::hasLibrary() || Slim::Music::Import->stillScanning) {
+			main::INFOLOG && $log->is_info && $log->info('Detected active LMS scan. Will try again in 30 minutes.');
+			Slim::Utils::Timers::setTimer(undef, Time::HiRes::time() + 1800, \&exportScheduler);
+			return;
+		}
 		my $exporttime = $prefs->get('exporttime');
 		my $day = $prefs->get('export_lastday');
 		if (!defined($day)) {
@@ -372,7 +380,7 @@ sub exportScheduler {
 			my $currenttime = $hour * 60 * 60 + $min * 60;
 
 			if (($day ne $mday) && $currenttime > $time) {
-				main::DEBUGLOG && $log->is_debug && $log->debug('Starting scheduled export');
+				main::INFOLOG && $log->is_info && $log->info('Starting scheduled export');
 				eval {
 					Slim::Utils::Scheduler::add_task(\&initExport);
 				};
@@ -392,6 +400,29 @@ sub exportScheduler {
 		}
 	}
 }
+
+sub _setPostScanCBTimer {
+	main::DEBUGLOG && $log->is_debug && $log->debug('Killing existing timers for post-scan export to prevent multiple calls');
+	Slim::Utils::Timers::killOneTimer(undef, \&delayedPostScanExport);
+	main::DEBUGLOG && $log->is_debug && $log->debug('Scheduling a delayed post-scan export');
+	Slim::Utils::Timers::setTimer(undef, time() + 10, \&delayedPostScanExport);
+}
+
+sub delayedPostScanExport {
+	if (Slim::Music::Import->stillScanning) {
+		main::DEBUGLOG && $log->is_debug && $log->debug('Scan in progress. Waiting for current scan to finish.');
+		_setPostScanCBTimer();
+	} else {
+		main::INFOLOG && $log->is_info && $log->info('Will start post-scan export now');
+		eval {
+			Slim::Utils::Scheduler::add_task(\&initExport);
+		};
+		if ($@) {
+			$log->error("Post-scan export failed: $@");
+		}
+	}
+}
+
 
 sub isTimeOrEmpty {
 	my ($name, $arg) = @_;

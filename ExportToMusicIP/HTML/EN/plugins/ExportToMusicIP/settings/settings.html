@@ -56,16 +56,16 @@
 	[% END %]
 	<br>
 
-	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS_DESC" %]
-		<select class="stdedit" name="pref_adjustexportedratings" id="adjustexportedratings">
-			<option [% IF NOT prefs.adjustexportedratings %]selected [% END %]value="0">[% 'NO' | getstring %]</option>
-			<option [% IF prefs.adjustexportedratings %]selected [% END %]value="1">[% 'YES' | getstring %]</option>
+	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_POSTSCANEXPORT" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_POSTSCANEXPORT_DESC" %]
+		<select class="stdedit" name="pref_postscanexport" id="postscanexport">
+			<option [% IF NOT prefs.postscanexport %]selected [% END %]value="0">[% 'NO' | getstring %]</option>
+			<option [% IF prefs.postscanexport %]selected [% END %]value="1">[% 'YES' | getstring %]</option>
 		</select>
 	[% END %]
 	<br>
 
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_EXPORTING" desc="" %]
-		<input class="btn" id="exportnow" name="exportnow" type="submit" class="stdclick" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_EXPORT_BUTTON" | string %][% IF activemipexport or activelmscan %] disabled[% END %]"><input class="btn btn2" id="abort" name="abortexport" type="submit" class="stdclick" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_ABORT_BUTTON" | string %]"[% IF activelmsscan %] disabled[% END %]>
+		<input class="btn" id="exportnow" name="exportnow" type="submit" class="stdclick" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_EXPORT_BUTTON" | string %]"[% IF activemipexport or activelmscan %] disabled[% END %]><input class="btn btn2" id="abort" name="abortexport" type="submit" class="stdclick" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_ABORT_BUTTON" | string %]"[% IF activelmsscan %] disabled[% END %]>
 	[% END %]
 <br><br>
 

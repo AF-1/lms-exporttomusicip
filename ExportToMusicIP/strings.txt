@@ -56,23 +56,23 @@ PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH
 PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH_DESC
 	EN	Path to main music directory in LMS, empty means same music path as in LMS
 
-PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS
-	EN	Adjust odd ratings to LMS rating scale
-
-PLUGIN_EXPORTTOMUSICIP_SETTINGS_ADJUSTRATINGS_DESC
-	EN	LMS uses a rating scale with values ranging from zero (no stars) to 100 (5 stars) where 10 equals a half-star (Examples: 20 = 1 star, 50 = 2.5 stars).<br><br>If your LMS database includes odd rating values (like 4 or 67), i.e. not evenly divisible by 10, you can use this setting to <b>export all odd rating values as rounded values that comply with the LMS standard rating scale</b> (evenly divisible by 10).<br>Example: 4 => 0 and 67 => 70.<br><br>This will only adjust rating values exported to MusicIP, not those stored in the LMS database.
-
 PLUGIN_EXPORTTOMUSICIP_SCHEDULEDEXPORTS
 	EN	Automatic scheduled export
 
 PLUGIN_EXPORTTOMUSICIP_SCHEDULEDEXPORTS_DESC
-	EN	Let LMS export values for rating, play count and date last played to MusicIP once a day
+	EN	Export your values for rating, play count and date last played to MusicIP on a <i>daily</i> basis.<br>If a scheduled export has already been created on a specific day, the next one will not be carried out until the following day, even if you change the scheduled export time.
 
 PLUGIN_EXPORTTOMUSICIP_AUTO_EXPORT_TIME
 	EN	Scheduled export time
 
 PLUGIN_EXPORTTOMUSICIP_AUTO_EXPORT_TIME_DESC
-	EN	Set the time for a daily automatic export to MusicIP
+	EN	Set the time for a daily automatic export to MusicIP.<br><br><b>Please note:</b><br>The actual export happens <i>no later than 30 minutes after</i> the set export time.
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_POSTSCANEXPORT
+	EN	Post-scan export
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_POSTSCANEXPORT_DESC
+	EN	This will automatically initiate an export about 10 seconds after a completed LMS scan.
 
 PLUGIN_EXPORTTOMUSICIP_EXPORTING
 	EN	Export to MusicIP
