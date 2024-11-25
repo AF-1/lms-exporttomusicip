@@ -446,8 +446,19 @@ sub padnum {
 
 sub adjustRating {
 	my $rating100ScaleValue = shift;
-	$rating100ScaleValue = int(($rating100ScaleValue + 5)/10) * 10;
-	return $rating100ScaleValue;
+	if (!$rating100ScaleValue || $rating100ScaleValue < 10) {
+		return 0;
+	} elsif ($rating100ScaleValue < 30) {
+		return 1; # 10 - 29
+	} elsif ($rating100ScaleValue < 50) {
+		return 2; # 30 - 49
+	} elsif ($rating100ScaleValue < 70) {
+		return 3; # 50 - 69
+	} elsif ($rating100ScaleValue < 90) {
+		return 4; # 70 - 89
+	} else {
+		return 5; # > 90
+	}
 }
 
 *escape = \&URI::Escape::uri_escape_utf8;
