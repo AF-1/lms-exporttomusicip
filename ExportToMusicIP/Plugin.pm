@@ -134,7 +134,7 @@ sub initExport {
 			while( $sth->fetch() ) {
 				my $thisTrack->{'url'} = $url;
 				if ($rating) {
-					$thisTrack->{'rating'} = adjustRating($rating)/20;
+					$thisTrack->{'rating'} = convertRating($rating)/20;
 				} else {
 					$thisTrack->{'rating'} = 0;
 				}
@@ -444,7 +444,7 @@ sub padnum {
 	sprintf("%02d", $_[0]);
 }
 
-sub adjustRating {
+sub convertRating {
 	my $rating100ScaleValue = shift;
 	if (!$rating100ScaleValue || $rating100ScaleValue < 10) {
 		return 0;
