@@ -134,7 +134,7 @@ sub initExport {
 			while( $sth->fetch() ) {
 				my $thisTrack->{'url'} = $url;
 				if ($rating) {
-					$thisTrack->{'rating'} = convertRating($rating)/20;
+					$thisTrack->{'rating'} = convertRating($rating);
 				} else {
 					$thisTrack->{'rating'} = 0;
 				}
