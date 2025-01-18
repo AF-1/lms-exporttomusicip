@@ -123,7 +123,7 @@ sub initExport {
 		my $table = ($apc_enabled && $prefs->get('useapcvalues')) ? 'alternativeplaycount' : 'tracks_persistent';
 		my $sql = "SELECT tracks_persistent.url, $table.playCount, $table.lastPlayed, tracks_persistent.rating FROM tracks_persistent,tracks";
 		$sql .= " left join alternativeplaycount on tracks.urlmd5 = alternativeplaycount.urlmd5" if ($apc_enabled && $prefs->get('useapcvalues'));
-		$sql .= " where tracks_persistent.urlmd5 = tracks.urlmd5 and (tracks_persistent.lastPlayed is not null or tracks_persistent.rating > 0)";
+		$sql .= " where tracks_persistent.urlmd5 = tracks.urlmd5 and ifnull(tracks.remote,0) = 0 and (tracks_persistent.lastPlayed is not null or tracks_persistent.rating > 0)";
 
 		my $dbh = Slim::Schema->dbh;
 		my $sth = $dbh->prepare($sql);
