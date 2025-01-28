@@ -3,7 +3,7 @@ Export To MusicIP
 
 Plugin to export rating, play count and date last played values of your **local** music files from LMS to MusicIP.<br>
 
-⚠️ **I don't use MusicIP, so I can't run tests and provide support for this plugin.**
+⚠️ **I'm not maintaining this plugin. I don't provide support for it.** And I don't use MusicIP.
 <br><br>
 
 ## Requirements
