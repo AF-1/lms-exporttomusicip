@@ -3,7 +3,6 @@ Export To MusicIP
 ![Min. LMS Version](https://img.shields.io/badge/Min._LMS_Version_Required-7.9-darkgreen)<br>
 
 Plugin to export rating, play count and date last played values of your **local** music files from LMS to MusicIP.
-
 <br><br>
 
 > [!NOTE]
