@@ -1,17 +1,14 @@
 Export To MusicIP
 ====
+![Min. LMS Version](https://img.shields.io/badge/Min._LMS_Version_Required-7.9-darkgreen)<br>
 
 Plugin to export rating, play count and date last played values of your **local** music files from LMS to MusicIP.<br>
 
-⚠️ **I'm not maintaining this plugin. I don't provide support for it.** And I don't use MusicIP.
-<br><br>
+> [!NOTE]
+> ⚠️ **I'm not maintaining this plugin. I don't provide support for it.** And I don't use MusicIP.<br>
+> If you have any problems, check out the [Lyrion Community Support Forum](https://forums.lyrion.org/).
 
-## Requirements
-
-- LMS version >= 7.**9**
-- LMS database = SQLite
-
-<br><br>
+<br><br><br>
 
 ## Screenshots[^1]
 
@@ -20,18 +17,11 @@ Plugin to export rating, play count and date last played values of your **local*
 
 ## Installation
 
-### Using the repository URL
-
 - Add the repository URL below at the bottom of *LMS* > *Settings* > *Plugins* and click *Apply*:<br>
 [https://raw.githubusercontent.com/AF-1/sobras/main/repos/lmsghonly/public.xml](https://raw.githubusercontent.com/AF-1/sobras/main/repos/lmsghonly/public.xml)
 
 - Install the plugin from the added repository at the bottom of the page.
 
-<br>
-
-### Manual Install
-
-Please read the instructions on how to [install a plugin manually](https://github.com/AF-1/sobras/wiki/Manual-installation-of-LMS-plugins).
 <br><br><br><br>
 
 
