@@ -42,6 +42,6 @@ The export results can be confirmed by opening the MIP cache in the windows vers
 Go to <i>LMS Settings > Advanced > Export to MusicIP</i> and set the debug level of this plugin to <i>Info</i>. Check the server.log for relevant error messages and warnings.<br>If you need to ask for support in the LMS forum, set the debug level to <i>debug</i> and include the log in your post.
 </p></details><br>
 
-<br><br><br><
+<br><br>
 
 [^1]: The screenshots might not correspond to the UI of the latest release in every detail.
