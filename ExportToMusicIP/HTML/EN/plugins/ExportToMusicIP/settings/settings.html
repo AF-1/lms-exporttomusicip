@@ -1,5 +1,4 @@
-<script type="text/javascript">function inprogress(elementid){document.getElementById(elementid).className = "inprogress";}</script>
-<style>.inputfield{margin-left:4px}.btn{margin-top:-1px;padding:3px}.btn2{margin-left:14px}.statusmsgwrapper{padding-left:294px;}:root{--cti-exportstat-main-color:red;--cti-exportstat-text-shadow-color:rgba(0,0,0,0)}.status{color:var(--cti-exportstat-main-color) !important;font-size:120%;font-eight:bold;}.success{color:green !important;}.exportstatus:after{font-size:180%;content:' .';animation:dots 1.8s steps(5,end)infinite}@keyframes dots{0%,20%{color:var(--cti-exportstat-text-shadow-color);text-shadow:.25em 0 0 var(--cti-exportstat-text-shadow-color),.5em 0 0 var(--cti-exportstat-text-shadow-color)}40%{color:var(--cti-exportstat-main-color);text-shadow:.25em 0 0 var(--cti-exportstat-text-shadow-color),.5em 0 0 var(--cti-exportstat-text-shadow-color)}60%{text-shadow:.25em 0 0 var(--cti-exportstat-main-color),.5em 0 0 var(--cti-exportstat-text-shadow-color)}80%,100%{text-shadow:.25em 0 0 var(--cti-exportstat-main-color),.5em 0 0 var(--cti-exportstat-main-color)}}@-webkit-keyframes Pulse{from{color:#630030;-webkit-text-shadow:0 0 2px transparent}50%{color:#e33100;-webkit-text-shadow:0 0 5px #e33100}to{color:#630030;-webkit-text-shadow:0 0 2px transparent}}@keyframes Pulse{from{color:#630030;text-shadow:0 0 2px transparent}50%{color:#e33100;text-shadow:0 0 5px #e33100}to{color:#630030;text-shadow:0 0 2px transparent}}.inprogress{padding-left:15px;-webkit-animation-name:Pulse;animation-name:Pulse;-webkit-animation-duration:2s;animation-duration:2s;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.hide{visibility:hidden;}.githublink{padding-left:22px;}</style>
+<style>.inputfield{margin-left:4px}.btn{margin-top:-1px;padding:3px}.btn2{margin-left:14px}.statusmsgwrapper{padding-left:294px;}:root{--cti-exportstat-main-color:red;--cti-exportstat-text-shadow-color:rgba(0,0,0,0)}.status{color:var(--cti-exportstat-main-color) !important;font-size:120%;font-weight:bold;}.success{color:green !important;}.exportstatus:after{font-size:180%;content:' .';animation:dots 1.8s steps(5,end)infinite}@keyframes dots{0%,20%{color:var(--cti-exportstat-text-shadow-color);text-shadow:.25em 0 0 var(--cti-exportstat-text-shadow-color),.5em 0 0 var(--cti-exportstat-text-shadow-color)}40%{color:var(--cti-exportstat-main-color);text-shadow:.25em 0 0 var(--cti-exportstat-text-shadow-color),.5em 0 0 var(--cti-exportstat-text-shadow-color)}60%{text-shadow:.25em 0 0 var(--cti-exportstat-main-color),.5em 0 0 var(--cti-exportstat-text-shadow-color)}80%,100%{text-shadow:.25em 0 0 var(--cti-exportstat-main-color),.5em 0 0 var(--cti-exportstat-main-color)}}@-webkit-keyframes Pulse{from{color:#630030;-webkit-text-shadow:0 0 2px transparent}50%{color:#e33100;-webkit-text-shadow:0 0 5px #e33100}to{color:#630030;-webkit-text-shadow:0 0 2px transparent}}@keyframes Pulse{from{color:#630030;text-shadow:0 0 2px transparent}50%{color:#e33100;text-shadow:0 0 5px #e33100}to{color:#630030;text-shadow:0 0 2px transparent}}.inprogress{padding-left:15px;-webkit-animation-name:Pulse;animation-name:Pulse;-webkit-animation-duration:2s;animation-duration:2s;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite}.hide{visibility:hidden;}.githublink{padding-left:22px;}</style>
 [% page = "PLUGIN_EXPORTTOMUSICIP" %]
 [% PROCESS settings/header.html %]
 <br>
@@ -11,34 +10,45 @@
 
 [% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_MUSICIPSETTINGS" desc="" %]
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_HOSTNAME" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_HOSTNAME_DESC" %]
-		<input class="inputfield" type="text" class="stdedit" name="pref_musicip_hostname" id="musicip_hostname" value="[% prefs.musicip_hostname %]" size="50">
+		<input class="inputfield stdedit" type="text" name="pref_musicip_hostname" id="musicip_hostname" value="[% prefs.musicip_hostname %]" size="50">
 	[% END %]
 	<br>
 
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_PORT" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_PORT_DESC" %]
-		<input class="inputfield" type="number" class="stdedit" name="pref_musicip_port" id="musicip_port" value="[% prefs.musicip_port %]" size="4">
+		<input class="inputfield stdedit" type="number" name="pref_musicip_port" id="musicip_port" value="[% prefs.musicip_port %]" size="4">
 	[% END %]
 	<br>
 
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_TIMEOUT" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_TIMEOUT_DESC" %]
-		<input class="inputfield" type="number" class="stdedit" name="pref_musicip_timeout" id="musicip_timeout" value="[% prefs.musicip_timeout %]" size="4">
+		<input class="inputfield stdedit" type="number" name="pref_musicip_timeout" id="musicip_timeout" value="[% prefs.musicip_timeout %]" size="4">
 	[% END %]
 	<br>
 
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_REPLACEEXTENSION" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_REPLACEEXTENSION_DESC" %]
-		<input class="inputfield" type="text" class="stdedit" name="pref_musicip_replaceextension" id="musicip_replaceextension" value="[% prefs.musicip_replaceextension %]" size="6">
+		<input class="inputfield stdedit" type="text" name="pref_musicip_replaceextension" id="musicip_replaceextension" value="[% prefs.musicip_replaceextension %]" size="6">
 	[% END %]
 	<br>
 
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_MIPMUSICPATH" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_MIPMUSICPATH_DESC" %]
-		<input class="inputfield" type="text" class="stdedit" name="pref_musicip_mipmusicpath" id="musicip_mipmusicpath" value="[% prefs.musicip_mipmusicpath %]" size="50">
+		<input class="inputfield stdedit" type="text" name="pref_musicip_mipmusicpath" id="musicip_mipmusicpath" value="[% prefs.musicip_mipmusicpath %]" size="50">
 	[% END %]
 	<br>
 
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH_DESC" %]
-		<input class="inputfield" type="text" class="stdedit" name="pref_musicip_lmsmusicpath" id="musicip_lmsmusicpath" value="[% prefs.musicip_lmsmusicpath %]" size="50">
+		<input class="inputfield stdedit" type="text" name="pref_musicip_lmsmusicpath" id="musicip_lmsmusicpath" value="[% prefs.musicip_lmsmusicpath %]" size="50">
 	[% END %]
 	<br>
+
+	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MIP_RATING_THRESHOLD" desc="PLUGIN_EXPORTTOMUSICIP_SETTINGS_MIP_RATING_THRESHOLD_DESC" %]
+		<select class="stdedit" name="pref_mip_rating_threshold" id="mip_rating_threshold">
+			<option [% IF prefs.mip_rating_threshold == 0 %]selected [% END %]value="0">0 (disabled)</option>
+			<option [% IF prefs.mip_rating_threshold == 1 %]selected [% END %]value="1">1</option>
+			<option [% IF prefs.mip_rating_threshold == 2 %]selected [% END %]value="2">2</option>
+			<option [% IF prefs.mip_rating_threshold == 3 %]selected [% END %]value="3">3</option>
+			<option [% IF prefs.mip_rating_threshold == 4 %]selected [% END %]value="4">4</option>
+		</select>
+	[% END %]
+<br>
 [% END %]
 
 <br>
@@ -65,7 +75,7 @@
 	<br>
 
 	[% WRAPPER setting title="PLUGIN_EXPORTTOMUSICIP_EXPORTING" desc="" %]
-		<input class="btn" id="exportnow" name="exportnow" type="submit" class="stdclick" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_EXPORT_BUTTON" | string %]"[% IF activemipexport or activelmscan %] disabled[% END %]><input class="btn btn2" id="abort" name="abortexport" type="submit" class="stdclick" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_ABORT_BUTTON" | string %]"[% IF activelmsscan %] disabled[% END %]>
+		<input class="btn stdclick" id="exportnow" name="exportnow" type="submit" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_EXPORT_BUTTON" | string %]"[% IF activemipexport or activelmsscan %] disabled[% END %]><input class="btn btn2 stdclick" id="abort" name="abortexport" type="submit" value="[% "PLUGIN_EXPORTTOMUSICIP_EXPORTING_ABORT_BUTTON" | string %]"[% IF activelmsscan %] disabled[% END %]>
 	[% END %]
 <br><br>
 
@@ -96,13 +106,14 @@
 		}
 
 		getPrefValFromServer().then((jsonData) => {
+			const resultVal = Object.values(jsonData.result)[0];
 			console.log('jsonData = ' + JSON.stringify(jsonData));
-			if (prefValue == '?') {
-				console.log('value for "' + prefName + '" = ' + Object.values(jsonData.result)[0]);
+			if (prefValue === '?') {
+				console.log('value for "' + prefName + '" = ' + resultVal);
 			}
 
 			if (prefName == 'ExportInProgress') {
-				if (Object.values(jsonData.result)[0] == 0) {
+				if (resultVal == 0) {
 					console.log('No export in progress');
 					document.getElementById('exportnow').disabled = false;
 					document.getElementById('abort').disabled = false;
@@ -110,7 +121,7 @@
 					document.getElementById('statusmsg').classList.remove('success', 'exportstatus');
 					clearInterval(exportStatus);
 					getPrefVal('exportResult');
-				} else if (Object.values(jsonData.result)[0] == 1) {
+				} else if (resultVal == 1) {
 					console.log('Export in progress');
 					document.getElementById('exportnow').disabled = true;
 					document.getElementById('statusmsg').innerHTML = 'Exporting';
@@ -118,14 +129,14 @@
 					document.getElementById('statusmsg').classList.add('exportstatus');
 				}
 			} else if (prefName == 'exportResult') {
-				if (Object.values(jsonData.result)[0] == 1) {
+				if (resultVal == 1) {
 					console.log('Export completed - success');
 					document.getElementById('statusmsg').classList.add('success');
 					document.getElementById('statusmsg').innerHTML = 'Export completed - success';
-				} else if (Object.values(jsonData.result)[0] == 2) {
+				} else if (resultVal == 2) {
 					console.log('Export aborted');
 					document.getElementById('statusmsg').innerHTML = 'Export aborted';
-				} else if (Object.values(jsonData.result)[0] == 3) {
+				} else if (resultVal == 3) {
 					console.log('Export completed with errors');
 					document.getElementById('statusmsg').innerHTML = 'Export completed with errors. Check server log for details.';
 				}

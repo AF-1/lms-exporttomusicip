@@ -13,10 +13,6 @@ PLUGIN_EXPORTTOMUSICIP_SETTINGS_REPO_LINK_TEXT
 PLUGIN_EXPORTTOMUSICIP_SETTINGS_REPO_LINK
 	EN	https://github.com/AF-1/lms-exporttomusicip
 
-
-PLUGIN_EXPORTTOMUSICIP_SETTINGS_EXPORT
-	EN	Export
-
 PLUGIN_EXPORTTOMUSICIP_MUSICIPSETTINGS
 	EN	MusicIP settings
 
@@ -55,6 +51,12 @@ PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH
 
 PLUGIN_EXPORTTOMUSICIP_SETTINGS_MUSICIP_LMSMUSICPATH_DESC
 	EN	Path to main music directory in LMS, empty means same music path as in LMS
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MIP_RATING_THRESHOLD
+	EN	MIP rating threshold
+
+PLUGIN_EXPORTTOMUSICIP_SETTINGS_MIP_RATING_THRESHOLD_DESC
+	EN	Ratings at or below this value (0-4 on MusicIP's 0-5 scale) will be exported as 0. The remaining ratings are stretched to fill the 1-5 range. Set to 0 to disable mapping (default).
 
 PLUGIN_EXPORTTOMUSICIP_SCHEDULEDEXPORTS
 	EN	Automatic scheduled export

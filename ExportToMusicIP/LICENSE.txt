@@ -1,3 +1,9 @@
+Export To MusicIP
+Copyright (c) 2024 AF
+Portions of code derived from the TrackStat MusicIP module (c) 2006 Erland Isaksson
+
+---
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
