@@ -56,7 +56,7 @@ PLUGIN_EXPORTTOMUSICIP_SETTINGS_MIP_RATING_THRESHOLD
 	EN	MIP rating threshold
 
 PLUGIN_EXPORTTOMUSICIP_SETTINGS_MIP_RATING_THRESHOLD_DESC
-	EN	Ratings at or below this value (0-4 on MusicIP's 0-5 scale) will be exported as 0. The remaining ratings are stretched to fill the 1-5 range. Set to 0 to disable mapping (default).
+	EN	Ratings below this value are sent to MusicIP as 0 (unrated). All other ratings are then scaled up to cover MusicIP's full 1–5 range, making better use of MusicIP's rating-based features.<br><br>Example: threshold 3 → LMS ratings below 3 stars become 0 (unrated), ratings from 3 stars upward are stretched to MusicIP 1–5.<br>Set to 0 to disable (default).
 
 PLUGIN_EXPORTTOMUSICIP_SCHEDULEDEXPORTS
 	EN	Automatic scheduled export
