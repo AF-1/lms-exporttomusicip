@@ -441,10 +441,15 @@ sub mapRatingToMip {
 	my $lmsRating = shift;
 	my $threshold = $prefs->get('mip_rating_threshold') || 0;
 
+	# undocumented pref: export null/zero ratings and ratings < 10 as MIP 1 instead of 0
+	if ($prefs->get('mip_unrated_as_one')) {
+		return 1 if !$lmsRating || $lmsRating < 10;
+	}
+
+	# values below threshold*20 (exclusive) export as 0, threshold*20 and above are stretched onto MIP 1-5
 	return convertRating($lmsRating) unless $threshold > 0 && $threshold < 5;
 
-	# values below threshold*20 (exclusive) export as 0; threshold*20 and above are stretched onto MIP 1-5
-	return 0 if !$lmsRating || $lmsRating < ($threshold * 20);
+	return 0 if $lmsRating < ($threshold * 20);
 	my $lmsMin = $threshold * 20;
 	my $lmsRange = 100 - $lmsMin;
 	return int(($lmsRating - $lmsMin) / $lmsRange * 5 + 0.5) || 1;
